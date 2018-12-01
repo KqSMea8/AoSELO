@@ -1,0 +1,9 @@
+footer {
+    float: left;
+    width: 100%;
+}
+
+aside {
+    float: left;
+    margin-top: 5px;
+}

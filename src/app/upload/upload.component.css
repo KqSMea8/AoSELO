@@ -1,0 +1,19 @@
+.uploader {
+    float: left;
+    width: 70%;
+    margin-left: 6px;
+    font-family: 'Droid-Sans';
+}
+
+h3 {
+    font-size: .75em;
+}
+
+h4 {
+    margin: 0;
+}
+
+h5 {
+    margin: 0;
+    font-style: italic;
+}

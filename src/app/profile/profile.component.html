@@ -1,0 +1,37 @@
+<div class="userInfo">
+  <img src={{details?.profilePic}}>
+  <div id="profile-info" class="profile-info">
+   <h1>{{details?.username}}</h1>
+   <h2>
+      {{details?.firstName}} {{details?.lastName}}<br>
+      {{details?.email}}<br>
+      Player ID: {{details?.playerId}}
+   </h2>
+  </div>
+   <h2>Favored faction:</h2>
+   <h3>{{details?.subFaction}}</h3>
+  </div>
+
+<div class="body">
+  <p> 
+    Games Fought: {{details?.gamesFought}}
+    Wins: {{details?.gamesWon}}
+    Losses: {{details?.gamesFought - details?.gamesWon}}
+    Win Percentage: {{details?.gamesWon / details?.gamesFought}}<br>
+    Current Overall Rank: {{details?.playerRank}}
+    Best Rank Acheived: 2 
+  </p>
+    <form name="subfaction" action="#">
+      <label for="list">Current Rank for:</label>
+       <select id="list">
+        <option value="DES">Destruction</option>
+        <option value="Chaos">Chaos</option>
+        <option value="Death">Death</option>
+      </select>  {{details?.desRank}}
+    </form>
+    <div class="buttons">
+      <button a routerLink="/upload">Upload</button>
+      <button a routerLink="/edit">Edit</button>
+      <button ng-click="logout()" a routerLink="/">Logout</button>
+    </div>
+</div>

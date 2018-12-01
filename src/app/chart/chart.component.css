@@ -1,0 +1,30 @@
+body {
+   float: left;
+   width: 70%;
+   margin: 0 10px;
+}  
+table {
+  background-color: white;
+ }
+
+ table th {
+   padding: 2px 2px;
+   background-color: #2f2f2f;
+   color: white;
+   width: 80px;
+   margin-top: 0%;
+ }
+
+ table tr {
+   height: 25px;
+   padding: 0 5px;
+   text-align: center;
+ }
+
+.even {
+   background-color: cadetblue;
+ }
+
+ .mat-paginator {
+   width: 420px;
+ }

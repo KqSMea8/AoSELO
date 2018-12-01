@@ -1,0 +1,57 @@
+[
+  {
+    "id": "0000000001",
+    "name": {
+      "first": "Brian",
+      "last": "Kissel"
+      },
+    "username": "foolsama",
+    "faction": "Death",
+    "subfaction": "Legions of Nagash",
+    "rank": "3"
+  },
+  {
+    "id": "0000000002",
+    "name": {
+      "first": "Josh",
+      "last": "Keal"
+      },
+    "username": "AngoreDemon",
+    "faction": "Chaos",
+    "subfaction": "Blades of Khorne",
+    "rank": "2"
+  },
+  {
+    "id": "0000000003",
+    "name": {
+      "first": "Conor",
+      "last": "Sheehy"
+      },
+    "username": "deadly",
+    "faction": "Destruction",
+    "subfaction": "Ironjawz",
+    "rank": "4"
+  },
+  {
+    "id": "0000000004",
+    "name": {
+      "first": "Ross",
+      "last": "McCune"
+      },
+    "username": "daxyross",
+    "faction": "Chaos",
+    "subfaction": "Beasts of Chaos",
+    "rank": "1"
+  },
+  {
+    "id": "0000000005",
+    "name": {
+      "first": "Taylor",
+      "last": "Thies"
+      },
+    "username": "Fablon",
+    "faction": "Order",
+    "subfaction": "Kharadron Overlords",
+    "rank": "5"
+  }
+]

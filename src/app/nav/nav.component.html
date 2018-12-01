@@ -1,0 +1,22 @@
+<div class="menublock">
+<nav class="nav">
+	<ul class="ul">
+		<li>
+			<a routerLink="" routerLinkActive="activated" [routerLinkActiveOptions]="{exact: true}" class="button">Charts</a>
+		</li>
+		<li>
+			<a routerLink="/upload" routerLinkActive="activated" class="button">Upload</a>
+		</li>
+		<li *ngIf="isAuthenticated">
+			<a routerLink="/profile" routerLinkActive="activated" class="button">Profile</a>
+		</li>
+		<li *ngIf="!isAuthenticated">
+			<button (click)="login()">Log In</button>
+		</li>
+		<!-- <li *ngIf="!auth.isLoggedIn()">
+			<a routerLink="/login" class="button">Log In</a>
+		</li> -->
+	</ul>
+</nav>
+</div>
+

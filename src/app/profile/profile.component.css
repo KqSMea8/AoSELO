@@ -1,0 +1,40 @@
+.userInfo {
+    margin: 2px auto 2px 5px;
+    display: grid;
+    grid-template: 'img div';
+    grid-template-columns: 100px auto;
+    width: 70%;
+}
+
+.userInfo .profile-info {
+    margin-left: 8px;
+    text-align: left;
+}
+
+.userInfo img {
+    height: 90px;
+    width: 90px;
+    border-radius: 50px;
+    margin: 20px 0 0 5px;
+}
+
+.userInfo h1 {
+    margin-bottom: 0%;
+    font-size: 1.5em;
+}
+
+.userInfo h2 {
+    margin: 0;
+    font-size: 1.2em;
+}
+
+.userInfo h3 {
+    margin: 5px auto 0 auto;
+    font-style: italic;
+    font-size: 1.1em;
+}
+
+.body {
+    float: left;
+    width: 70%;
+}

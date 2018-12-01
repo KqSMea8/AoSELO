@@ -1,0 +1,71 @@
+  <div id="uploader" class="uploader" >
+  <div [hidden]="submitted">
+    <div id="heading">
+    <h3>Entering Results for:</h3>
+    <h4>loggedInPlayer.email</h4>
+    <h5>Legion of Blood</h5>
+    <p>Find a player:</p>
+    </div>
+  <form name="FindPlayer" action="#">
+    Email Adress: <input type="text" name="email"><br>
+    Username: <input type="text" name="username"><br>
+    User ID: <input type="text" name="userid"><br>
+    <input type="submit" value="Find">
+  </form>
+  <br>
+  <p>Enter your results:</p>
+  <div class="results">
+  <form (ngSubmit)="submitGame()" #gameForm="ngForm">
+    <!-- <label for="Grand Alliance">Grand Alliance</label>
+    <select name="Grand Alliance">
+      <option value="order">Order</option>
+      <option value="Chaos">Chaos</option>
+      <option value="death">Death</option>
+      <option value="destruction">Destruction</option>
+    </select> -->
+  <div class="form-group">
+    <label for="faction">Faction</label>
+    <select class="form-control" id="factions" required>
+      <option *ngFor="let faction of factions" [value]="faction">{{faction}}</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="GameResult">Game Result</label>
+    <select class="form-control" id="results" required>
+      <option *ngFor="let result of results" [value]="plan">{{result}}</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="BattlePlan">Battleplan</label>
+    <select id="batteplans" class="form-control" required>
+        <option *ngFor="let plan of battleplans" [value]="plan">{{plan}}</option>
+    </select>
+  </div>
+     <br>
+    <div class="form-group">
+      <button type="submit" class="button">Submit</button>
+      <input type="button" name="Edit Last" value="Edit Last">
+      <input type="button" name="Review" value="History">
+    </div>
+    <br>
+    </form>
+</div>
+</div>
+  <div [hidden]="!submitted">
+    <h2>You submitted the following:</h2>
+    <div class="row">
+      <div class="col-xs-3">Faction</div>
+      <div class="col-xs-9">{{faction}}</div>
+    </div>
+    <div class="row">
+      <div class="col-xs-3">Battleplan</div>
+      <div class="col-xs-9">{{plan}}</div>
+    </div>
+    <div class="row">
+      <div class="col-xs-3">Result</div>
+      <div class="col-xs-9">{{result}}</div>
+    </div>
+    <br>
+    <button class="button" (click)="submitted=false">Edit</button>
+  </div>
+</div>

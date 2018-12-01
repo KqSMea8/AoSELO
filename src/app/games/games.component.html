@@ -1,0 +1,37 @@
+<body>
+  <div fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-between stretch" class="products">
+  <table mat-table [dataSource]="dataSource" matSort matSortDisabled class="mat-evlevation-z5" matSortDirection="asc">
+    <ng-container matColumnDef="Winner">
+      <th mat-header-cell *matHeaderCellDef> Winner </th>
+      <td mat-cell *matCellDef="let game"> {{game.playerOne}} </td>
+    </ng-container>
+    <ng-container matColumnDef="WinningFaction">
+      <th mat-header-cell *matHeaderCellDef> Faction </th>
+      <td mat-cell *matCellDef="let game"> {{game.playerOneFaction}}</td>
+    </ng-container>
+    <ng-container matColumnDef="Loser">
+      <th mat-header-cell *matHeaderCellDef> Loser </th>
+      <td mat-cell *matCellDef="let game"> {{game.playerTwo}} </td>
+    </ng-container>
+    <ng-container matColumnDef="LosingFaction">
+      <th mat-header-cell *matHeaderCellDef> Faction </th>
+      <td mat-cell *matCellDef="let game"> {{game.playerTwoFaction}} </td>
+    </ng-container>
+    <ng-container matColumnDef="Result">
+      <th mat-header-cell *matHeaderCellDef> Result </th>
+      <td mat-cell *matCellDef="let game"> {{game.playerOneResult}} </td>
+    </ng-container>
+    <ng-container matColumnDef="Battleplan">
+      <th mat-header-cell *matHeaderCellDef> Battleplan </th>
+      <td mat-cell *matCellDef="let game"> {{game.battlePlan}} </td>
+    </ng-container>
+    <ng-container matColumnDef="PointsLevel">
+      <th mat-header-cell *matHeaderCellDef> Result </th>
+      <td mat-cell *matCellDef="let game"> {{game.pointsLevel}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+  </div>
+  <mat-paginator class="mat-paginator" [length]="resultsLength" [pageSize]="25"></mat-paginator>
