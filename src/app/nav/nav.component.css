@@ -11,13 +11,14 @@
 }	
 .ul a:hover {
 	background-color: #400000;
+	padding: 15px 0px;
 }
 
 .ul a.activated {
 	font-weight: bold;
 }
 
-.button {
+.ul a {
     border: none;
     color: white;
     padding: 15px 0px;

@@ -1,11 +1,11 @@
 export class Game {
     _id: string;
-    playerOne: string;
-    playerTwo: string;
+    playerOne: number;
+    playerTwo: number;
     playerOneResult: string;
     playerTwoResult: string;
     battlePlan: string;
-    pointsLevel: boolean;
+    pointsLevel: number;
     playerOneFaction: string;
     playerTwoFaction: string;
     playerOneList: string;

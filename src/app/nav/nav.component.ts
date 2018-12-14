@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { OktaAuthService } from '@okta/okta-angular';
+import { AuthService } from '@/_services/authentication.service';
 
 
 @Component({
@@ -11,18 +11,9 @@ export class NavComponent implements OnInit {
   
   isAuthenticated: boolean;
 
-  constructor(public oktaAuth: OktaAuthService) {
-    this.oktaAuth.$authenticationState.subscribe(
-      (isAuthenticated: boolean) => this.isAuthenticated = isAuthenticated
-    );		
-	}
+  constructor(public auth: AuthService) {}
 
-  login() {
-    this.oktaAuth.loginRedirect();
-  }
-
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   
 

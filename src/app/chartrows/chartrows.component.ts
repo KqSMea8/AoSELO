@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { AuthenticationService } from '@/_services/authentication.service';
+import { AuthService } from '@/_services/authentication.service';
 
 @Component({
   selector: 'app-chartrows',
@@ -11,7 +11,7 @@ export class ChartrowsComponent implements OnInit {
   @Input() character: any;
   @Input() columns: string[];
   
-  constructor(private auth: AuthenticationService) { }
+  constructor(public auth: AuthService) { }
 
   ngOnInit() {
   }

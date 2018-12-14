@@ -1,38 +1,57 @@
   <div id="uploader" class="uploader" >
-  <div [hidden]="submitted">
+  <div [hidden]="submitted" class="card-body">
     <div id="heading">
-    <h3>Entering Results for:</h3>
-    <h4>loggedInPlayer.email</h4>
+    <h3>Entering Results for</h3>
+    <h4> username </h4>
     <h5>Legion of Blood</h5>
     <p>Find a player:</p>
     </div>
-  <form name="FindPlayer" action="#">
+    <!-- <label class="sr-only" for="search">Search</label>
+    <div class="search input-group mb-3">
+      <div class="input-group-prepend">
+        <div class="input-group-text">Search</div>
+      </div>
+      <input
+        id="search"
+        type="text"
+        class="form-control"
+        [(ngModel)]="query"
+        (keyup)="searchPlayers()" />
+      <span class="input-group-append">
+        <button
+          class="btn btn-danger"
+          (click)="resetQuery()"
+          [disabled]="!query">&times;</button>
+      </span>
+    </div> -->
+ <!-- No search results -->
+ <!-- <p *ngIf="fs.noSearchResults(filteredPlayers, query)" class="alert alert-warning">
+    No events found for <em class="text-danger">{{ query }}</em>, sorry!
+  </p> -->
+    <!-- <form name="FindPlayer" action="#">
     Email Adress: <input type="text" name="email"><br>
     Username: <input type="text" name="username"><br>
     User ID: <input type="text" name="userid"><br>
     <input type="submit" value="Find">
-  </form>
+  </form> -->
   <br>
   <p>Enter your results:</p>
   <div class="results">
   <form (ngSubmit)="submitGame()" #gameForm="ngForm">
-    <!-- <label for="Grand Alliance">Grand Alliance</label>
-    <select name="Grand Alliance">
-      <option value="order">Order</option>
-      <option value="Chaos">Chaos</option>
-      <option value="death">Death</option>
-      <option value="destruction">Destruction</option>
-    </select> -->
-  <div class="form-group">
+    <label for="Grand Alliance">Grand Alliance</label>
+    <select name="Grand Alliance" class="form-control" id="GA" required>
+      <option *ngFor="let ga of factionGAs" [value]="ga">{{ga}}</option>
+    </select>
+  <!-- <div class="form-group">
     <label for="faction">Faction</label>
     <select class="form-control" id="factions" required>
       <option *ngFor="let faction of factions" [value]="faction">{{faction}}</option>
     </select>
-  </div>
+  </div> -->
   <div class="form-group">
     <label for="GameResult">Game Result</label>
     <select class="form-control" id="results" required>
-      <option *ngFor="let result of results" [value]="plan">{{result}}</option>
+      <option *ngFor="let result of results" [value]="result">{{result}}</option>
     </select>
   </div>
   <div class="form-group">
@@ -44,7 +63,7 @@
      <br>
     <div class="form-group">
       <button type="submit" class="button">Submit</button>
-      <input type="button" name="Edit Last" value="Edit Last">
+      <button class="button" (click)="toggleEditForm()">{{ editBtnText }}</button>
       <input type="button" name="Review" value="History">
     </div>
     <br>

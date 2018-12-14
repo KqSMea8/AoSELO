@@ -1,5 +1,5 @@
 <div class="chartrows">
   <button routerLink="" routerLinkActive="activated" [routerLinkActiveOptions]="{exact: true}">World</button>
-  <button *ngIf="auth.isLoggedIn()" routerLink="" routerLinkActive="activated" [routerLinkActiveOptions]="{exact: true}">Near You</button>
-  <button *ngIf="auth.isLoggedIn()" routerLink="" routerLinkActive="activated" [routerLinkActiveOptions]="{exact: true}">Friends</button>
+  <button *ngIf="auth.loggedIn" routerLink="" routerLinkActive="activated" [routerLinkActiveOptions]="{exact: true}">Near You</button>
+  <button *ngIf="auth.loggedIn" routerLink="" routerLinkActive="activated" [routerLinkActiveOptions]="{exact: true}">Friends</button>
 </div>

@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Games } from "../_services/games.service";
+import { AuthService } from "@/_services/authentication.service";
 import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 
 @Component({
@@ -9,29 +10,31 @@ import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 })
 export class GamesComponent implements OnInit {
 
-  displayedColumns: string[] = ['Winner', 'WinningFaction','Loser', 'LosingFaction', 'Result', 'Battleplan', 'PointsLevel'];
-  dataSource = new MatTableDataSource<any>();
   
-  loading = false;
+  gameData = Array();
+  dataSource = new MatTableDataSource(this.gameData);
+  displayedColumns: string[] = ['Winner', 'WinningFaction','Loser', 'LosingFaction', 'Result', 'Battleplan', 'PointsLevel'];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   
-  constructor(public games: Games) {}
+  constructor(public games: Games) {
+    games.getGames().subscribe(data =>{
+      this.gameData = data;
+      this.dataSource.data = this.gameData;
+    });
+  }
   
   ngOnInit() {
-    
     // If the user changes the sort order, reset back to the first page.
     this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
-    this.refresh();
   }
 
-  async refresh() {
-    this.loading = true;
-    const data = await this.games.getGames();
-    this.dataSource.data = data;
-    this.loading = false;
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
+
 }
 
 

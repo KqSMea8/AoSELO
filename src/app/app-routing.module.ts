@@ -7,11 +7,12 @@ import { LoginComponent } from './login/login.component';
 import { ProfileComponent } from './profile/profile.component';
 import { RegisterComponent } from './register/register.component';
 import { UploadComponent } from './upload/upload.component';
-import { OktaService } from './_services/okta.service';
 import { EditComponent } from "./_components/edit/edit.component";
-import { CanActivate } from '@angular/router/src/utils/preactivation';
-import { OktaCallbackComponent, OktaAuthGuard } from "@okta/okta-angular";
+import { CallbackComponent } from "./callback/callback.component";
 import { GamesComponent } from './games/games.component';
+import { AuthGuardService } from "@/_guards/auth.guard";
+import { AdminGuard } from "@/_guards/admin.guard";
+import { LogoutComponent } from './_components/logout.component';
 
 
 
@@ -22,34 +23,42 @@ const routes: Routes = [
 	},
 	{
 		path: 'upload',
-		component: UploadComponent,
-		canActivate: [OktaAuthGuard]
+		canActivate: [AuthGuardService],
+		component: UploadComponent
 	},
 	{
 		path: 'profile',
-		component: ProfileComponent,
-		canActivate: [OktaAuthGuard]
+		canActivate: [AuthGuardService],
+		component: ProfileComponent
 		
 	},
-	{
-		path: 'register',
-		component: RegisterComponent
+	// {
+	// 	path: 'register',
+	// 	component: RegisterComponent
 		
-	},
+	// },
 	{
 		path: 'edit',
-		component: EditComponent,
-		canActivate: [OktaAuthGuard]
-	},
-	{
-
-		path: 'implicit/callback',	
-		component: OktaCallbackComponent
-	
+		canActivate: [AuthGuardService],
+		component: EditComponent
+		
 	},
 	{
 		path: 'games',
+		canActivate: [AuthGuardService, AdminGuard],
 		component: GamesComponent
+	},
+	{
+		path: 'callback',
+		component: CallbackComponent
+	},
+	{
+		path: 'login',
+		component: LoginComponent
+	},
+	{
+		path: 'logout',
+		component: LogoutComponent
 	}
 	
 ];

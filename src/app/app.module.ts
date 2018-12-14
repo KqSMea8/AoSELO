@@ -1,6 +1,6 @@
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { NavComponent } from './nav/nav.component';
@@ -20,9 +20,20 @@ import { Rank } from './_services/rank.service';
 import { Games } from './_services/games.service';
 import { AppMaterialModule } from './_helpers/material-import';
 import { EditComponent } from './_components/edit/edit.component';
-import { OktaAuthModule } from '@okta/okta-angular';
-import { OktaService } from './_services/okta.service';
 import { GamesComponent } from './games/games.component';
+import { AuthService } from './_services/authentication.service';
+import { AdminGuard } from "@/_guards/admin.guard";
+import { UtilityService } from "@/_services/utils.service";
+import { FilterSortService } from './_services/filter-sort.service';
+import { CallbackComponent } from './callback/callback.component';
+import { LoadingComponent } from '@/_components/loading.component';
+import { AuthGuardService } from '@/_guards/auth.guard';
+import { LogoutComponent } from './_components/logout.component';
+import { FrameAuth } from './_services/frameauth.servce';
+import { ErrorInterceptor } from './_helpers/error.interceptor';
+import { JwtInterceptor } from './_helpers/jwt.interceptor';
+import { ResetComponent } from './_components/reset/reset.component';
+
 
 @NgModule({
   declarations: [
@@ -39,7 +50,11 @@ import { GamesComponent } from './games/games.component';
     FooterComponent,
     ChartrowsComponent,
     EditComponent,
-    GamesComponent
+    GamesComponent,
+    CallbackComponent,
+    LoadingComponent,
+    LogoutComponent,
+    ResetComponent
   ],
   imports: [
     BrowserModule,
@@ -48,18 +63,20 @@ import { GamesComponent } from './games/games.component';
     CdkTableModule,
     ReactiveFormsModule,
     FormsModule,
-    AppMaterialModule,
-    OktaAuthModule.initAuth({
-      issuer: 'https://dev-498610.oktapreview.com/oauth2/default',
-      redirectUri: 'http://192.168.1.3:4200/implicit/callback',
-      clientId: '0oahxvp75nDkrk3b00h7'
-    })
+    AppMaterialModule
 	],
   providers: [
     Games,
     Rank,
-    OktaService,
-    Title
+    UtilityService,
+    Title,
+    AuthService,
+    FilterSortService,
+    AuthGuardService,
+    AdminGuard,
+    FrameAuth,
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]
 })

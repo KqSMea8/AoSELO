@@ -1,59 +1,48 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Strict//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="robots" content="none" />
-
-    <title>Log In</title>
-</head>
-
-<body>
-    <!-- <div class="login-bg-image"></div>
-    <div id="okta-login-container"></div>
-
-    <script type="text/javascript">
-        // "config" object contains default widget configuration
-        // with any custom overrides defined in your admin settings.
-        var config = OktaUtil.getSignInWidgetConfig();
-
-        // Render the Okta Sign-In Widget
-        var oktaSignIn = new OktaSignIn(config);
-        oktaSignIn.renderEl({ el: '#okta-login-container' },
-            OktaUtil.completeLogin,
-            function(error) {
-                // Logs errors that occur when configuring the widget.
-                // Remove or replace this with your own custom error handler.
-                console.log(error.message, error);
-            }
-        );
-    </script> -->
-    This is Temporary
-</body>
-</html>
-
-<!-- <div class="container">
-
-    <div class="row">
-      
-      <div class="col-md-6">
-  
-        <h1 class="form-signin-heading">Sign in</h1>
-        <p class="lead">Not a member? Please <a routerLink="/register">register</a> instead.</p>
+<div class="login-page">
+  <!-- <span *ngIf="auth.loggingIn">Logging in...</span> -->
+  <ng-template [ngIf]="!auth.loggingIn">
     
-        <form (submit)="login()">
-          <div class="form-group">
-            <label for="email">Email address</label>
-            <input type="email" class="form-control" name="email" placeholder="Enter email" [(ngModel)]="credentials.email">
-          </div>
-          <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" class="form-control" name="password" placeholder="Password" [(ngModel)]="credentials.password">
-          </div>
-          <button type="submit" class="btn btn-default">Sign in!</button>
-        </form>
-  
-      </div>
+<mat-card class="example-card">
+  <form [formGroup]="loginForm" (ngSubmit)="pageLogin()">
+    <div class="form-group">
+    <img class="mb-4" src="../../assets/logo.png" alt="" width="72" height="72">
+    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+    <label for="email" class="sr-only">Email address</label>
+    <input type="email" formControlName="email"
+      class="form-control" placeholder="Email Address" [ngClass]="{ 'is-invalid':
+        submitted && f.email.errors }" />
+        <div *ngIf="submitted && loginForm.hasError" class="invalid-feedback">
+            <div *ngIf="!loginForm.valid">Username is required</div>
+        </div>
+    <label for="password" class="sr-only">Password</label>
+    <input type="password" formControlName="password" [ngClass]="{ 'is-invalid':
+      submitted && f.password.errors }"
+      class="form-control" placeholder="Password">
+      <div *ngIf="submitted && !loginForm.hasError" class="invalid-feedback">
+        <div *ngIf="loginForm.errors">Password is required</div>
     </div>
+    </div>
+      <div>
+      <hr>
+      <p>Or sign in using...</p>
+      <div class="btn-group btn-group-justified">
+          <!-- <a ng-repeat="(provider, property) in social" ng-href="{{property.login}}" target="_self" class="btn btn-info"><i ng-class="'fa ' + property.icon + ' fa-lg'"></i> {{property.text}}</a> -->
+      </div>
+  </div>
+  <mat-card-actions>
+    <button type="submit" class="btn btn-primary btn-login" color="primary">Login</button>
+    <button class="btn btn-link" (click)="pageForgotPassword()" color="primary">Forgot</button>
+  </mat-card-actions>
+</form>
+</mat-card>
+</ng-template>
+    <span *ngIf="auth.currentUserValue && auth.currentUser">
+      You are logged in as blank
+    <span class="divider">|</span>
+    <a (click)="auth.logout()">Log Out</a>
+    </span>
+
+</div>
+
+
   
-  </div> -->

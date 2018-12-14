@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { OktaAuthService } from "@okta/okta-angular";
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { Observable, throwError as ObservableThrowError } from 'rxjs';
+import { catchError } from "rxjs/operators";
+import { AuthService } from "@/_services/authentication.service";
 import { Game } from '@/_models/games';
+import { Router } from '@angular/router';
 
 const baseUrl = 'http://localhost:3000/api';
 
@@ -14,38 +16,49 @@ export class Games {
 
     game : Observable<Game>;
 
-    constructor (public oktaAuth: OktaAuthService, private http: HttpClient) {}
+    constructor (public auth: AuthService, private http: HttpClient, private route: Router) {}
 
-    private async request(method: string, url: string, data?: any) {
-        const token = await this.oktaAuth.getAccessToken();
-
-        console.log('request ' + JSON.stringify(data));
-        const result = this.http.request(method, url, {
-            body: data,
-            responseType: 'json',
-            observe: 'body',
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
-        return new Promise<any>((resolve, reject) => {
-            result.subscribe(resolve as any, reject as any);
-        });
+    private get _authHeader(): string {
+        return `Bearer ${this.auth.currentUser}`;
     }
 
-    getGames() {
-        return this.request('get', `${baseUrl}/games/`);
+    getGames(): Observable<any>{
+        return this.http.request('get', `${baseUrl}/games/`);
     }
 
-    getGame(id: string) {
-        return this.http.request('get', `${baseUrl}/games/${id}`);
+    getGame(id: number) {
+        return this.http.request('get', `${baseUrl}/games/${id}`,
+        {headers: new HttpHeaders().set("Authorization", this._authHeader)})
+            .pipe(catchError((error) => this._handleError(error))
+        );
+    }
+
+    getLastGame(id: number) {
+        return this.http.request('get', `${baseUrl}/games/${id}/game`,
+        {headers: new HttpHeaders().set("Authorization", this._authHeader)})
+            .pipe(catchError((error) => this._handleError(error))
+        );
+    }
+
+    editLastGame(id: number) {
+        return this.http.request('put', `${baseUrl}/games/${id}/game`,
+        {headers: new HttpHeaders().set("Authorization", this._authHeader)})
+            .pipe(catchError((error) => this._handleError(error))
+        );
     }
 
     upload(game: Game) {
-        return this.request('post', `${baseUrl}/game`, game);
+        return this.http.request('post', `${baseUrl}/game`,
+        {headers: new HttpHeaders().set("Authorization", this._authHeader)})
+            .pipe(catchError((error) => this._handleError(error))
+        );
     }
 
-    // editGame(game: Game) {
-    //     return this.request('post', `${baseUrl}/games/${game._id}`);
-    // }
+    private _handleError(err: HttpErrorResponse | any): Observable<any> {
+        const errorMsg = err.message || 'Error: Unable to complete request.';
+        if (err.message && err.message.indexOf('No JWT present') > -1) {
+          this.route.navigateByUrl('login');
+        }
+        return ObservableThrowError(errorMsg);
+    }
 }

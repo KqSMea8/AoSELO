@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { OktaAuthService } from "@okta/okta-angular";
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { Observable, throwError as ObservableThrowError } from 'rxjs';
+import { catchError } from "rxjs/operators";
+import { AuthService } from "@/_services/authentication.service";
 import { Player } from '@/_models/players';
 
 const baseUrl = 'http://localhost:3000/api';
@@ -12,40 +13,33 @@ const baseUrl = 'http://localhost:3000/api';
 
 export class Rank {
 
-    players : Observable<Player>;
-    
-    constructor (public oktaAuth: OktaAuthService, private http: HttpClient) {}
+    constructor (private auth: AuthService, private http: HttpClient) {}
 
-    private async request(method: string, url: string, data?: any) {
-        const token = await this.oktaAuth.getAccessToken();
+    private get _authHeader(): string {
+        return `${this.auth.currentUser}`;
+      }
 
-        console.log('request ' + JSON.stringify(data));
-        const result = this.http.request(method, url, {
-            body: data,
-            responseType: 'json',
-            observe: 'body',
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
-        return new Promise<any>((resolve, reject) => {
-            result.subscribe(resolve as any, reject as any);
-        });
+    getPlayers(): Observable<any>{
+        return this.http.request('get', `${baseUrl}/players/`);
     }
 
-    getPlayers() {
-        return this.request('get', `${baseUrl}/players/`);
+    getPlayer(id: number): Observable<any> {
+        return this.http.request('get', `${baseUrl}/profile`,
+        {headers: new HttpHeaders().set("Authorization", this._authHeader)})
+            .pipe(catchError((error) => error)
+        );
     }
 
-    getPlayer(id: string) {
-        return this.http.request('get', `${baseUrl}/players/${id}`);
+    editPlayer(id: number, player: Player) {
+        return this.http.request<Player>('put', `${baseUrl}/player/${player.playerId}`)
+        .pipe(catchError((error) => error
+        ))};
     }
 
-    register(player: Player) {
-        return this.request('post', `${baseUrl}/player`, player);
-    }
-
-    editPlayer(player: Player) {
-        return this.request('post', `${baseUrl}/player/${player.playerId}`);
-    }
-}
+    // private _handleError(err: HttpErrorResponse | any): Observable<any> {
+    //     const errorMsg = err.message || 'Error: Unable to complete request.';
+    //     if (err.message && err.message.indexOf('No JWT present') > -1) {
+    //       navigate();
+    //     }
+    //     return ObservableThrowError(errorMsg);
+    //   }

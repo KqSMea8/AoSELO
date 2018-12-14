@@ -1,24 +1,26 @@
-<div class="userInfo">
-  <img src={{details?.profilePic}}>
+<app-loading *ngIf="loading"></app-loading>
+
+<div class="userInfo" ([ngModel])="playerSub">
+  <img src="{{player.profilePic}}">
   <div id="profile-info" class="profile-info">
-   <h1>{{details?.username}}</h1>
+   <h1>{{player.username}}</h1>
    <h2>
-      {{details?.firstName}} {{details?.lastName}}<br>
-      {{details?.email}}<br>
-      Player ID: {{details?.playerId}}
+      {{player.playerFirstName}} {{player.playerLastName}}<br>
+      {{player.email}}<br>
+      Player ID: {{player.playerId}}
    </h2>
   </div>
    <h2>Favored faction:</h2>
-   <h3>{{details?.subFaction}}</h3>
+   <h3>{{player.subFaction}}</h3>
   </div>
 
-<div class="body">
+<div class="body" ([ngModel])="playerSub">
   <p> 
-    Games Fought: {{details?.gamesFought}}
-    Wins: {{details?.gamesWon}}
-    Losses: {{details?.gamesFought - details?.gamesWon}}
-    Win Percentage: {{details?.gamesWon / details?.gamesFought}}<br>
-    Current Overall Rank: {{details?.playerRank}}
+    Games Fought: {{player.gamesPlayed}}
+    Wins: {{player.gamesWon}}
+    Losses: {{player.gamesPlayed - player.gamesWon}}
+    Win Percentage: {{player.gamesWon / player.gamesPlayed}}<br>
+    Current Overall Rank: {{player.playerRank}}
     Best Rank Acheived: 2 
   </p>
     <form name="subfaction" action="#">
@@ -27,7 +29,7 @@
         <option value="DES">Destruction</option>
         <option value="Chaos">Chaos</option>
         <option value="Death">Death</option>
-      </select>  {{details?.desRank}}
+      </select>  {{player.desRank}}
     </form>
     <div class="buttons">
       <button a routerLink="/upload">Upload</button>

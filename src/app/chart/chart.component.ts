@@ -1,10 +1,12 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { UserDetails, AuthenticationService } from "../_services/authentication.service";
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { AuthService } from "../_services/authentication.service";
 import { Player } from '@/_models/players';
 import { Rank } from '@/_services/rank.service';
-import { merge, Observable, of as observableOf} from 'rxjs';
+import { merge, Observable, of as observableOf, Subscription } from 'rxjs';
 import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
-import { catchError, startWith, switchMap } from 'rxjs/operators';
+import { Title } from '@angular/platform-browser';
+import { UtilityService } from '@/_services/utils.service';
+import { FilterSortService } from '@/_services/filter-sort.service';
 
 
 @Component({
@@ -14,41 +16,51 @@ import { catchError, startWith, switchMap } from 'rxjs/operators';
 })
 export class ChartComponent implements OnInit {
 
-  displayedColumns: string[] = ['Rank', 'Nickname', 'Name', 'Faction', 'Score'];
-  dataSource = new MatTableDataSource<any>();
-  //player: Player;
+  pageTitle = 'Rankings';
+  //playerListSub: Subscription;
+  //playerList: Player[];
+  //filteredPlayers: Player[];
   
-  loading = false;
+ // loading: boolean;
+ // error: boolean;
   //sortedPlayers: Player[];
+
+  myData = Array();
+  dataSource = new MatTableDataSource(this.myData);
+  displayedColumns: string[] = ['Rank', 'Nickname', 'Name', 'Faction', 'Score'];
   
-  // resultsLength = 0;
+  resultsLength = 0;
   // isLoadingResults = true;
   // isRateLimitReached = false;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   
-  constructor(public rank: Rank) {}
+  applyFilter(filterValue: string) {
+    filterValue = filterValue.trim(); //Remove whitespace
+    filterValue = filterValue.toLowerCase(); //MatTableSorts defaults to lowercase
+    this.dataSource.filter = filterValue;
+  }
+
+  constructor(public rank: Rank, private title: Title) {
+                rank.getPlayers().subscribe(data =>{
+                  this.myData = data;
+                  this.dataSource.data = this.myData;
+                });
+              }
   
   ngOnInit() {
-    
+    this.title.setTitle(this.pageTitle);
     // If the user changes the sort order, reset back to the first page.
     this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
-    this.refresh();
   }
 
-  async refresh() {
-    this.loading = true;
-    const data = await this.rank.getPlayers();
-    this.dataSource.data = data;
-    this.loading = false;
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
-
-    // this.rank.getPlayers()
-    //   .subscribe(player => this.player = player);
 
 }
-
 
 export interface Rows {
   Rank: number;
@@ -57,11 +69,3 @@ export interface Rows {
   Score: number;
   Faction: string;
 }
-// export class TempName {
-//   constructor(private rank: Rank) {}
-
-//   getRepoIssues(sort: string, order: string, page: number):
-//   Observable<Player> {
-//     return this.rank.getPlayers();
-//   }
-// }

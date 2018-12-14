@@ -1,113 +1,47 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Router } from '@angular/router';
-
-export interface UserDetails {
-  _id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  exp: number;
-  iat: number;
-}
-
-interface TokenResponse {
-  token: string;
-}
-
-export interface TokenPayload {
-  email: string;
-  password: string;
- // username: string;
-//  playerId: number;
-}
+import { ENV } from '@/_helpers/env.config';
+import { HttpClient } from '@angular/common/http';
+import { Player } from '@/_models/players';
 
 @Injectable({ providedIn: 'root' })
-export class AuthenticationService {
-    private token: string;
+export class AuthService {
+    private currentUserSubject: BehaviorSubject<Player>;
+    public currentUser: Observable<Player>;
 
-  constructor(private http: HttpClient, private router: Router) {}
-
-  private saveToken(token: string): void {
-    localStorage.setItem('mean-token', token);
-    this.token = token;
-  }
-
-  private getToken(): string {
-    if (!this.token) {
-      this.token = localStorage.getItem('mean-token');
-    }
-    return this.token;
-  }
-
-  public getUserDetails(): UserDetails {
-    const token = this.getToken();
-    let payload;
-    if (token) {
-      payload = token.split('.')[1];
-      payload = window.atob(payload);
-      return JSON.parse(payload);
-    } else {
-      return null;
-    }
-  }
-
-  public isLoggedIn(): boolean {
-    const user = this.getUserDetails();
-    if (user) {
-      return user.exp > Date.now() / 1000;
-    } else {
-      return false;
-    }
-  }
-
-  private request(method: 'post'|'get', type: 'login'|'register'|'profile'|'players', user?: TokenPayload): Observable<any> {
-    let base;
-
-    if (method === 'post') {
-      base = this.http.post(`http://localhost:3000/api/${type}`, user);
-    } else {
-      base = this.http.get(`http://localhost:3000/api/${type}`, { headers: { Authorization: `Bearer ${this.getToken()}` }});
+    constructor(private http: HttpClient) {
+        this.currentUserSubject = new BehaviorSubject<Player>(JSON.parse(localStorage.getItem('currentUser')));
+        this.currentUser = this.currentUserSubject.asObservable();
     }
 
-    const request = base.pipe(
-      map((data: TokenResponse) => {
-        if (data.token) {
-          this.saveToken(data.token);
-        }
-        return data;
-      })
-    );
+    public get currentUserValue(): Player {
+        return this.currentUserSubject.value;
+    }
 
-    return request;
-  }
+    login(email: string, password: string) {
+        return this.http.post<any>(`${ENV.BASE_API}login`, { email, password })
+            .pipe(map(user => {
+                // login successful if there's a jwt token in the response
+                if (user && user.token) {
+                    // store user details and jwt token in local storage to keep user logged in between page refreshes
+                    localStorage.setItem('currentUser', JSON.stringify(user));
+                    this.currentUserSubject.next(user);
+                }
 
-  public register(user: TokenPayload): Observable<any> {
-    return this.request('post', 'register', user);
-  }
+                return user;
+            }));
+    }
 
-  public login(user: TokenPayload): Observable<any> {
-    return this.request('post', 'login', user);
-  }
+    isAdmin() {}
 
-  public profile(): Observable<any> {
-    return this.request('get', 'profile');
-  }
+    logout() {
+        // remove user from local storage to log user out
+        localStorage.removeItem('currentUser');
+        this.currentUserSubject.next(null);
+    }
 
-  // public getPlayers(): Observable<any> {
-  //   return this.request('get', 'players');
-  // }
-
-  public getPlayers() {
-    return this.http
-    .get('http://localhost/api/players');
-  }
-
-  public logout(): void {
-    this.token = '';
-    window.localStorage.removeItem('mean-token');
-    this.router.navigateByUrl('/login');
-  }
+    doPasswordLost(email: string) {
+        return this.http.post<any>(`${ENV.BASE_API}reset`, email)
+    }
 }
