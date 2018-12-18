@@ -10,7 +10,7 @@ export class AuthService {
     private currentUserSubject: BehaviorSubject<Player>;
     public currentUser: Observable<Player>;
 
-    constructor(private http: HttpClient) {
+    constructor(public http: HttpClient) {
         this.currentUserSubject = new BehaviorSubject<Player>(JSON.parse(localStorage.getItem('currentUser')));
         this.currentUser = this.currentUserSubject.asObservable();
     }
@@ -41,7 +41,12 @@ export class AuthService {
         this.currentUserSubject.next(null);
     }
 
+       
+    editPlayer(player: any) {
+        return this.http.post<any>(`${ENV.BASE_API}profile`, {player: player});
+    }
+
     doPasswordLost(email: string) {
-        return this.http.post<any>(`${ENV.BASE_API}reset`, email)
+        return this.http.post(`${ENV.BASE_API}reset`, {email: email});
     }
 }

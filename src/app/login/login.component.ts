@@ -57,9 +57,5 @@ export class LoginComponent implements OnInit {
           this.loading=false;
       });    
   }
-
-  pageForgotPassword(email: string) {
-    this.auth.doPasswordLost(this.f.email.value);
-  }
     
 }

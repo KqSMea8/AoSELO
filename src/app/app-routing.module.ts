@@ -13,6 +13,7 @@ import { GamesComponent } from './games/games.component';
 import { AuthGuardService } from "@/_guards/auth.guard";
 import { AdminGuard } from "@/_guards/admin.guard";
 import { LogoutComponent } from './_components/logout.component';
+import { ResetComponent } from './_components/reset/reset.component';
 
 
 
@@ -32,11 +33,11 @@ const routes: Routes = [
 		component: ProfileComponent
 		
 	},
-	// {
-	// 	path: 'register',
-	// 	component: RegisterComponent
+	{
+		path: 'register',
+		component: RegisterComponent
 		
-	// },
+	},
 	{
 		path: 'edit',
 		canActivate: [AuthGuardService],
@@ -59,6 +60,10 @@ const routes: Routes = [
 	{
 		path: 'logout',
 		component: LogoutComponent
+	},
+	{
+		path: 'reset',
+		component: ResetComponent
 	}
 	
 ];

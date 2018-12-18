@@ -1,7 +1,15 @@
 <div class="reset">
-  <form method="POST">
-    <label>Email</label>
-    <input type="email" name="email">
-    <button class="btn btn=primary" type=submit>Reset Password</button>
-  </form>
+  <mat-card class="example-card">
+    <mat-card-title>Reset your password:</mat-card-title>
+    <form [formGroup]="resetForm" (ngSubmit)="onSubmit()">
+      <label for="email">Email</label>
+      <input type="email" formControlName="email" class="form-control"
+        [ngClass]="{ 'is-invalid': submitted && f.email.errors }" />
+        <div *ngIf="f.email.errors" class="invalid-feedback">
+            <div *ngIf="submitted && f.email.errors.required">Valid email address is required</div>
+            <div *ngIf="submitted && f.email.errors.email">Please enter a valid email address</div>
+        </div>
+      <button class="btn btn-primary" type=submit>Send</button>
+    </form>
+  </mat-card> 
   </div>

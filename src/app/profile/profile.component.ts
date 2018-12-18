@@ -17,7 +17,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   loggedInSub: Subscription;
   routeSub: Subscription;
   playerSub: Subscription;
-  player: Player;
+  player: Player = new Player;
   loading: boolean;
   error: boolean;
 
