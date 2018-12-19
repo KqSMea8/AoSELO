@@ -1,3 +1,9 @@
+#container {
+    float: left;
+    margin: 5px auto auto 15px;
+    text-align: center;
+}
+
 .userInfo {
     margin: 2px auto 2px 5px;
     display: grid;
@@ -34,7 +40,26 @@
     font-size: 1.1em;
 }
 
-.body {
-    float: left;
-    width: 70%;
+.first-row {
+    display: grid;
+    height: 20%;
+}
+
+mat-card {
+    margin: 1%;
+    background-color: black;
+    color: white;
+    filter: opacity(85%);
+}
+
+mat-card-title {
+    font-size: 1.0em;
+}
+
+mat-card-content {
+    font-size: 1.4em;
+}
+
+mat-card-actions {
+    margin-top: 5%;
 }

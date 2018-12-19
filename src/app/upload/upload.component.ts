@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { AuthService } from '@/_services/authentication.service';
-import { Router } from '@angular/router'
+import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router'
 import { Games } from '@/_services/games.service';
 import { Rank } from '@/_services/rank.service';
 import { Game } from '@/_models/games';
@@ -23,12 +24,18 @@ export class UploadComponent implements OnInit, OnDestroy {
   editBtnText: string;
   playerGame: Game;
   gamesSub: Subscription;
+  loggedInSub: Subscription;
+  routeSub: Subscription;
+  playerSub: Subscription;
   games: Game[];
-  id: string;
+  id: number;
+  player: Player = new Player;
   playerListSub: Subscription
-  playerList: Player[];
+  playerList: Player;
   filteredPlayers: Player[];
   factionGAs = ['Chaos','Death', 'Destruction', 'Order']
+  P1GA: string[] = [];
+  P2GA: string[] = [];
   orderFactions = OrderFactions;
   chaosFactions = ChaosFactions;
   desFactions = DesFactions;
@@ -43,15 +50,69 @@ export class UploadComponent implements OnInit, OnDestroy {
   error: boolean;
   query: '';
   submitted = false;
+  searchForm: FormGroup;
+  uploadForm: FormGroup;
 
   constructor(private router: Router, public auth: AuthService, public game: Games,
-              private rank: Rank, public fs: FilterSortService) { }
+              private rank: Rank, public fs: FilterSortService, private route: ActivatedRoute,
+              private formBuilder: FormBuilder) { }
 
    
   ngOnInit() {
     this._getGames();
     this.toggleEditForm(false);
     this._getPlayerList();
+    this.loggedInSub = this.auth.currentUser.subscribe(loggedIn => {
+      this.loading = true;
+      if (loggedIn) {
+        this._routeSubs();
+      }
+    });
+    this.searchForm = this.formBuilder.group({
+      playerId: ['', Validators.required]
+    });
+    this.uploadForm = this.formBuilder.group({
+      playerOne: this.auth.currentUserValue.playerId,
+      playerTwo: this.playerList,
+      playerOneResult: [null, Validators.required],
+      playerTwoResult: [null, Validators.required],
+      battlePlan: [null, Validators.required],
+      pointsLevel: [null, Validators.required],
+      P1GA: null,
+      P2GA: null,
+      playerOneFaction: [null, Validators.required],
+      playerTwoFaction: [null, Validators.required],
+      playerOneList: [null, Validators.required],
+      playerTwoList: [null, Validators.required]
+    });
+    this.uploadForm.get('P1GA').valueChanges.subscribe(value => {
+      this.P1GA.push(value);
+    });
+    this.uploadForm.get('P2GA').valueChanges.subscribe(value => {
+      this.P2GA.push(value);
+    });
+  }
+
+  private _routeSubs() {
+    // set playerId from route params and subscribe
+    this.routeSub = this.route.params.subscribe(params => {
+      this.id = params['playerId'];
+      this._getPlayer();
+    });
+  }
+
+  private _getPlayer() {
+    this.loading = true;
+    // Get player by playerID
+    this.playerSub = this.rank.getPlayer(this.id).subscribe(res =>{
+      this.player = res;
+      this.loading = false;
+    },
+    err => {
+      console.error(err);
+      this.loading = false;
+      this.error = true;
+    });
   }
 
   toggleEditForm(setVal?: boolean) {
@@ -92,12 +153,22 @@ export class UploadComponent implements OnInit, OnDestroy {
       );
   }
 
-  searchPlayers() {
-  }
+  get s() {return this.searchForm.controls;}
 
-  resetQuery() {
-    this.query = '';
-    this.filteredPlayers = this.playerList;
+  findPlayers() {
+    this.submitted = true;
+    if (this.searchForm.invalid) {
+      return;
+    }
+    this.rank.findPlayer(this.s.playerId.value)
+    .subscribe(
+      result => {
+        this.playerList == result;
+        console.log("PUT Request is successful ", result);
+      },
+      error => {
+          console.log("Error", error);
+      });    
   }
 
   submitGame() {
@@ -114,6 +185,7 @@ export class UploadComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.playerListSub.unsubscribe();
     this.gamesSub.unsubscribe();
+    this.playerSub.unsubscribe();
   }
 }
 

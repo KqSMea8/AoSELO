@@ -50,7 +50,11 @@ const routes: Routes = [
 		component: GamesComponent
 	},
 	{
-		path: 'callback',
+		path: 'reset/:resetToken',
+		component: CallbackComponent
+	},
+	{
+		path: 'password',
 		component: CallbackComponent
 	},
 	{

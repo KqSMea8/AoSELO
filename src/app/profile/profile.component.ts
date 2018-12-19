@@ -1,10 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '@/_services/authentication.service';
-import { ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Player } from '@/_models/players';
 import { Rank } from '@/_services/rank.service';
+
 
 @Component({
   selector: 'app-profile',
@@ -20,17 +21,15 @@ export class ProfileComponent implements OnInit, OnDestroy {
   player: Player = new Player;
   loading: boolean;
   error: boolean;
+  winPercentage: string;
 
   constructor(
     public auth: AuthService,
     private route: ActivatedRoute,
-    private rank: Rank) {}
+    private rank: Rank,
+    private router: Router) {}
  
-  onClick() {
-    this.auth.logout();
-  }
-  
-  ngOnInit() {
+   ngOnInit() {
     this.loggedInSub = this.auth.currentUser.subscribe(loggedIn => {
       this.loading = true;
       if (loggedIn) {
@@ -39,10 +38,16 @@ export class ProfileComponent implements OnInit, OnDestroy {
     });
   }
 
+  onClick() {
+    this.auth.logout();
+    this.router.navigateByUrl('/');
+  }
+
   private _routeSubs() {
     // set playerId from route params and subscribe
     this.routeSub = this.route.params.subscribe(params => {
       this.id = params['playerId'];
+      console.log(params);
       this._getPlayer();
     });
   }

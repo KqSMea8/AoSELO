@@ -30,16 +30,8 @@ export class Rank {
         );
     }
 
-    editPlayer(id: number, player: Player) {
-        return this.http.request<Player>('put', `${baseUrl}/player/${player.playerId}`)
-        .pipe(catchError((error) => error
-        ))};
+    findPlayer(playerId: number) {
+        return this.http.get(`${baseUrl}/player/${playerId}`);
     }
 
-    // private _handleError(err: HttpErrorResponse | any): Observable<any> {
-    //     const errorMsg = err.message || 'Error: Unable to complete request.';
-    //     if (err.message && err.message.indexOf('No JWT present') > -1) {
-    //       navigate();
-    //     }
-    //     return ObservableThrowError(errorMsg);
-    //   }
+}

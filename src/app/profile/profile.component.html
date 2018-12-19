@@ -1,6 +1,8 @@
 <app-loading *ngIf="loading"></app-loading>
 
-<div class="userInfo" ([ngModel])="playerSub">
+<mat-card class="text-white bg-dark mb-3" id="container" ([ngModel])="playerSub">
+  <mat-card-header>
+<div class="userInfo">
   <img src="{{player.profilePic}}">
   <div id="profile-info" class="profile-info">
    <h1>{{player.username}}</h1>
@@ -10,30 +12,65 @@
       Player ID: {{player.playerId}}
    </h2>
   </div>
-   <h2>Favored faction:</h2>
-   <h3>{{player.subFaction}}</h3>
   </div>
+</mat-card-header>
 
-<div class="body" ([ngModel])="playerSub">
-  <p> 
-    Games Fought: {{player.gamesPlayed}}
-    Wins: {{player.gamesWon}}
-    Losses: {{player.gamesPlayed - player.gamesWon}}
-    Win Percentage: {{player.gamesWon / player.gamesPlayed}}<br>
-    Current Overall Rank: {{player.playerRank}}
-    Best Rank Acheived: 2 
-  </p>
-    <form name="subfaction" action="#">
-      <label for="list">Current Rank for:</label>
-       <select id="list">
-        <option value="DES">Destruction</option>
-        <option value="Chaos">Chaos</option>
-        <option value="Death">Death</option>
-      </select>  {{player.desRank}}
-    </form>
-    <div class="buttons">
+  <div class="card-group" style="margin-top: 5%">
+      <mat-card class="card">
+        <mat-card-title>Current Global Rank</mat-card-title>
+        <mat-card-content>{{player.playerRank}}</mat-card-content>
+      </mat-card>
+      <mat-card class="card">
+        <mat-card-title>Win Ratio</mat-card-title>
+        <mat-card-content>{{(player.gamesWon / player.gamesPlayed) | percent: '2.0-0' }}</mat-card-content>
+      </mat-card>
+  </div>
+  <div class="card-group">
+      <mat-card class="card">
+        <mat-card-title>Favorite Faction</mat-card-title>
+        <mat-card-content>{{player.subFaction}}</mat-card-content>
+      </mat-card>
+      <mat-card class="card">
+        <mat-card-title>Highest Rank</mat-card-title>
+        <mat-card-content style="font-size: .8em">(coming soon)</mat-card-content>
+      </mat-card>
+      <mat-card class="card">
+        <mat-card-title>Games Played</mat-card-title>
+        <mat-card-content>{{player.gamesPlayed}}</mat-card-content>
+      </mat-card>
+      <mat-card class="card">
+        <mat-card-title>Games<br>Won</mat-card-title>
+        <mat-card-content>{{player.gamesWon}}</mat-card-content>
+      </mat-card>
+  </div>
+  <div id="3rd row label" style="margin-top: 5%"><h4>Current Rank For:</h4></div>
+  <div class="card-group">
+      <mat-card *ngIf="player.chaosRank" class="card">
+        <mat-card-title>Chaos</mat-card-title>
+        <mat-card-content>{{player.chaosRank}}</mat-card-content>
+      </mat-card>
+
+      <mat-card *ngIf="player.deathRank" class="card">
+        <mat-card-title>Death</mat-card-title>
+        <mat-card-content>{{player.deathRank}}</mat-card-content>
+      </mat-card>
+
+      <mat-card *ngIf="player.desRank" class="card">
+        <mat-card-title>Destruction</mat-card-title>
+        <mat-card-content>{{player.desRank}}</mat-card-content>
+      </mat-card>
+
+      <mat-card *ngIf="player.orderRank" class="card">
+        <mat-card-title>Order</mat-card-title>
+        <mat-card-content>{{player.orderRank}}</mat-card-content>
+      </mat-card>
+  </div>
+  <mat-card-actions>
+    
       <button a routerLink="/upload">Upload</button>
       <button a routerLink="/edit">Edit</button>
-      <button ng-click="logout()" a routerLink="/">Logout</button>
-    </div>
-</div>
+      <button (click)="onClick()">Logout</button>
+    
+  </mat-card-actions>
+
+</mat-card>

@@ -1,77 +1,113 @@
-  <div id="uploader" class="uploader" >
+  <div id="uploader" class="uploader" ([ngModel])="playerSub">
   <div [hidden]="submitted" class="card-body">
-    <div id="heading">
+    <mat-card id="heading">
     <h3>Entering Results for</h3>
-    <h4> username </h4>
-    <h5>Legion of Blood</h5>
-    <p>Find a player:</p>
-    </div>
-    <!-- <label class="sr-only" for="search">Search</label>
-    <div class="search input-group mb-3">
-      <div class="input-group-prepend">
-        <div class="input-group-text">Search</div>
+    <h4>{{player.username}}</h4>
+    </mat-card>
+    <br>
+    <mat-card>
+    <mat-card-title>Find opponent:</mat-card-title>
+    <form [formGroup]="searchForm" (ngSubmit)="findPlayers()">
+      <div class="form-group">
+        <label for="playerId">PlayerId: </label>
+        <input class="form-control" type="text" placeholder="Search" formControlName="playerId" />
       </div>
-      <input
-        id="search"
-        type="text"
-        class="form-control"
-        [(ngModel)]="query"
-        (keyup)="searchPlayers()" />
-      <span class="input-group-append">
-        <button
-          class="btn btn-danger"
-          (click)="resetQuery()"
-          [disabled]="!query">&times;</button>
-      </span>
-    </div> -->
- <!-- No search results -->
- <!-- <p *ngIf="fs.noSearchResults(filteredPlayers, query)" class="alert alert-warning">
-    No events found for <em class="text-danger">{{ query }}</em>, sorry!
-  </p> -->
-    <!-- <form name="FindPlayer" action="#">
-    Email Adress: <input type="text" name="email"><br>
-    Username: <input type="text" name="username"><br>
-    User ID: <input type="text" name="userid"><br>
-    <input type="submit" value="Find">
-  </form> -->
+    </form>
+  </mat-card>
   <br>
-  <p>Enter your results:</p>
-  <div class="results">
-  <form (ngSubmit)="submitGame()" #gameForm="ngForm">
-    <label for="Grand Alliance">Grand Alliance</label>
-    <select name="Grand Alliance" class="form-control" id="GA" required>
-      <option *ngFor="let ga of factionGAs" [value]="ga">{{ga}}</option>
-    </select>
-  <!-- <div class="form-group">
-    <label for="faction">Faction</label>
-    <select class="form-control" id="factions" required>
-      <option *ngFor="let faction of factions" [value]="faction">{{faction}}</option>
-    </select>
-  </div> -->
-  <div class="form-group">
-    <label for="GameResult">Game Result</label>
-    <select class="form-control" id="results" required>
-      <option *ngFor="let result of results" [value]="result">{{result}}</option>
-    </select>
+<mat-card style="text-align: center">
+  <mat-card-title> Enter your results: </mat-card-title>  
+  <form [formGroup]="uploadForm" (ngSubmit)="submitGame()">
+  <mat-card-content>
+  <div class="card-group" style="margin: auto 10% auto 10%">
+    <mat-card>
+      <mat-card-title>{{player.username}}'s Results:</mat-card-title>
+        <div class="form-group">
+          <select placeholder="Select Grand Alliance" class="form-control" formControlName="P1GA">
+            <option [ngValue]="null">Select Grand Alliance:</option>
+            <option *ngFor="let ga of factionGAs" [value]="ga">{{ga}}</option>
+          </select>
+          <select *ngIf="P1GA.includes('Order')" formControlName="playerOneFaction" class="form-control">
+            <option [ngValue]="null">Select Faction:</option>
+            <option *ngFor="let sf of orderFactions" [value]="sf">{{sf}}</option>
+          </select>
+          <select *ngIf="P1GA.includes('Destruction')" formControlName="playerOneFaction" class="form-control">
+            <option [ngValue]="null">Select Faction:</option>  
+            <option *ngFor="let sf of desFactions" [value]="sf">{{sf}}</option>
+            </select>
+          <select *ngIf="P1GA.includes('Chaos')" formControlName="playerOneFaction" class="form-control">
+            <option [ngValue]="null">Select Faction:</option>
+            <option *ngFor="let sf of chaosFactions" [value]="sf">{{sf}}</option>
+          </select>
+          <select *ngIf="P1GA.includes('Death')" formControlName="playerOneFaction" class="form-control">
+            <option [ngValue]="null">Select Faction:</option>
+            <option *ngFor="let sf of deathFactions" [value]="sf">{{sf}}</option>
+          </select>
+          <select class="form-control" formControlName="playerOneResult" required>
+            <option [ngValue]="null">Select your result:</option>
+            <option *ngFor="let result of results" [value]="result">{{result}}</option>
+          </select>
+        </div>
+    </mat-card>
+    <mat-card>
+      <mat-card-title>Opponent's Results:</mat-card-title>
+      <div class="form-group">
+          <select placeholder="Select Grand Alliance" class="form-control" formControlName="P2GA">
+              <option [ngValue]="null">Select Grand Alliance:</option>
+              <option *ngFor="let ga of factionGAs" [value]="ga">{{ga}}</option>
+            </select>
+            <select *ngIf="P2GA.includes('Order')" formControlName="playerOneFaction" class="form-control">
+              <option [ngValue]="null">Select Faction:</option>
+              <option *ngFor="let sf of orderFactions" [value]="sf">{{sf}}</option>
+            </select>
+            <select *ngIf="P2GA.includes('Destruction')" formControlName="playerOneFaction" class="form-control">
+              <option [ngValue]="null">Select Faction:</option>  
+              <option *ngFor="let sf of desFactions" [value]="sf">{{sf}}</option>
+              </select>
+            <select *ngIf="P2GA.includes('Chaos')" formControlName="playerOneFaction" class="form-control">
+              <option [ngValue]="null">Select Faction:</option>
+              <option *ngFor="let sf of chaosFactions" [value]="sf">{{sf}}</option>
+            </select>
+            <select *ngIf="P2GA.includes('Death')" formControlName="playerOneFaction" class="form-control">
+              <option [ngValue]="null">Select Faction:</option>
+              <option *ngFor="let sf of deathFactions" [value]="sf">{{sf}}</option>
+            </select>
+            <select class="form-control" formControlName="playerOneResult" required>
+              <option [ngValue]="null">Select your result:</option>
+              <option *ngFor="let result of results" [value]="result">{{result}}</option>
+            </select>
+      </div>
+    </mat-card>
   </div>
-  <div class="form-group">
-    <label for="BattlePlan">Battleplan</label>
-    <select id="batteplans" class="form-control" required>
-        <option *ngFor="let plan of battleplans" [value]="plan">{{plan}}</option>
-    </select>
-  </div>
-     <br>
-    <div class="form-group">
+    <mat-card style="align-content: center" width="60%">
+        <div class="form-group">
+          <select formControlName="battlePlan" class="form-control" required>
+              <option [value]="null">Select Battleplan:</option>
+              <option *ngFor="let plan of battleplans" [value]="plan">{{plan}}</option>
+          </select>
+          <select class="form-control" formControlName="pointsLevel" required>
+            <option [value]="null">Select points level:</option>
+            <option value="1000">1000</option>
+            <option value="2000">2000</option>
+          </select>
+        </div>
+    </mat-card>
+  </mat-card-content>
+
+  <br>
+  <mat-card-actions>        
+    
       <button type="submit" class="button">Submit</button>
       <button class="button" (click)="toggleEditForm()">{{ editBtnText }}</button>
       <input type="button" name="Review" value="History">
-    </div>
+    
+  </mat-card-actions>
+</form> 
+  </mat-card>
+  </div>
     <br>
-    </form>
-</div>
-</div>
-  <div [hidden]="!submitted">
-    <h2>You submitted the following:</h2>
+<mat-card [hidden]="!submitted">
+    <mat-card-title>You submitted the following:</mat-card-title>
     <div class="row">
       <div class="col-xs-3">Faction</div>
       <div class="col-xs-9">{{faction}}</div>
@@ -85,6 +121,8 @@
       <div class="col-xs-9">{{result}}</div>
     </div>
     <br>
-    <button class="button" (click)="submitted=false">Edit</button>
-  </div>
+    <mat-card-actions>
+      <button class="button" (click)="submitted=false">Edit</button>
+    </mat-card-actions>
+  </mat-card>
 </div>

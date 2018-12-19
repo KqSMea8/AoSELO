@@ -28,7 +28,6 @@ export class AuthService {
                     localStorage.setItem('currentUser', JSON.stringify(user));
                     this.currentUserSubject.next(user);
                 }
-
                 return user;
             }));
     }
@@ -43,10 +42,19 @@ export class AuthService {
 
        
     editPlayer(player: any) {
-        return this.http.post<any>(`${ENV.BASE_API}profile`, {player: player});
+        console.log({player: player});
+        return this.http.post(`${ENV.BASE_API}profile`, player);
     }
 
     doPasswordLost(email: string) {
         return this.http.post(`${ENV.BASE_API}reset`, {email: email});
+    }
+    
+    passwordReset(resetToken: string, password: string) {
+        return this.http.post(`${ENV.BASE_API}reset/${resetToken}`, password);
+    }
+
+    passwordChange(password: string) {
+        return this.http.post(`${ENV.BASE_API}password`, password);
     }
 }

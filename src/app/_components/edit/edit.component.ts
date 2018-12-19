@@ -40,11 +40,10 @@ export class EditComponent implements OnInit {
         }
       });
       this.editForm = this.formBuilder.group({
-        email: ['', Validators.email],
-        playerFirstName: '',
-        playerLastName: '',
-        profilePic: '',
-        password: ''
+        email: [],
+        playerFirstName: [],
+        playerLastName: [],
+        profilePic: []
       })
 
     }
@@ -74,7 +73,20 @@ export class EditComponent implements OnInit {
     if (this.editForm.invalid) {
       return;
     }
-    this.auth.editPlayer(this.editForm.value)
+    let formValue = this.editForm.value;
+
+    for (let prop in formValue) {
+      if (!formValue[prop]) {
+        delete formValue[prop];
+      }
+      if (Array.isArray(formValue[prop])) {
+        let resultArray = formValue[prop].filter((item: any) => item);
+        if (resultArray.length > 0 ) {
+          formValue[prop] = resultArray;
+        }
+      }
+    }
+    this.auth.editPlayer(formValue)
     .subscribe(
       edit => {
         this.router.navigateByUrl('/profile');
@@ -83,10 +95,6 @@ export class EditComponent implements OnInit {
       error => {
           console.log("Error", error);
       });    
-  }
-
-  pageForgotPassword(email: string) {
-    this.auth.doPasswordLost(this.f.email.value);
   }
 
 }
