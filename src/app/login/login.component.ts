@@ -18,6 +18,7 @@ export class LoginComponent implements OnInit {
   returnUrl: string;
   loading = false;
   submitted = false;
+  badPassword = false;
   
   constructor(public auth: AuthService, public router: Router,
       private formBuilder: FormBuilder,
@@ -53,7 +54,9 @@ export class LoginComponent implements OnInit {
         this.loading=false;   
       },
       error => {
+          
           console.log("Error", error);
+          this.badPassword = true;
           this.loading=false;
       });    
   }

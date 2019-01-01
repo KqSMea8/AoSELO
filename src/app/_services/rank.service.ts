@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError as ObservableThrowError } from 'rxjs';
-import { catchError } from "rxjs/operators";
+import { map, catchError } from "rxjs/operators";
 import { AuthService } from "@/_services/authentication.service";
 import { Player } from '@/_models/players';
+import { json } from '../../../node_modules_/@angular-devkit/core/src';
 
 const baseUrl = 'http://localhost:3000/api';
 
@@ -30,8 +31,10 @@ export class Rank {
         );
     }
 
-    findPlayer(playerId: number) {
-        return this.http.get(`${baseUrl}/player/${playerId}`);
+    findPlayer(terms: any): Observable<any> {
+        return this.http.post(`${baseUrl}/search`, terms);
     }
+
+    
 
 }

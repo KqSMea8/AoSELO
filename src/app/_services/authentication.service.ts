@@ -19,6 +19,18 @@ export class AuthService {
         return this.currentUserSubject.value;
     }
 
+    register(email: string, username: string, password: string): Observable<Player> {
+        var params = {email, username, password}
+        return this.http.post<Player>(`${ENV.BASE_API}register`, params)
+            .pipe(map(user => {
+                if (user && user.token) {
+                    localStorage.setItem('currentUser', JSON.stringify(user));
+                    this.currentUserSubject.next(user);
+                }
+                return user;
+            }));
+    }
+
     login(email: string, password: string) {
         return this.http.post<any>(`${ENV.BASE_API}login`, { email, password })
             .pipe(map(user => {
@@ -42,7 +54,6 @@ export class AuthService {
 
        
     editPlayer(player: any) {
-        console.log({player: player});
         return this.http.post(`${ENV.BASE_API}profile`, player);
     }
 

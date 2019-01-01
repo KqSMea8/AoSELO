@@ -1,20 +1,31 @@
-<h2>Register</h2>
-<p class="lead">Already signed up? Please <a routerLink="/login">Log in</a> instead.</p>
-<form (submit)="register()">
+<mat-card class="card">
+<mat-card-title>Register</mat-card-title>
+<p class="lead">Already signed up? Please <a routerLink="/login" style="color: blue">Log in</a> instead.</p>
+<form name="registerForm" #registerForm="ngForm" (ngSubmit)="register(model)">
     <div class="form-group">
-        <label for="email">Email Address</label>
-        <input type="text" placeholder="Email address" class="form-control" [(ngModel)]="credentials.email" name="email">
+        <input type="email" placeholder="Email address" class="form-control" 
+            [(ngModel)]="model.email" name="email" required #email="ngModel" ngModel email>
+            <div *ngIf="email.invalid && email.touched" class="alert alert-danger">Please enter a valid email address</div>
+            <small class="form-text text-muted">This email will be searchable by logged-in users.</small>
+        <input type="text" placeholder="Public nickname" class="form-control"
+             [(ngModel)]="model.username" name="username" required>
+        <input type="password" placeholder="Password (8 char minimum)" class="form-control"
+            [(ngModel)]="model.password" name="password" required minlength="8" #password="ngModel" (ngModelChange)="confirmPassword">
+            <div *ngIf="password.invalid && password.touched" class="alert alert-danger text-muted">
+                Your password must be 8 characters or more.
+            </div>
+        <input type="password" required [appCheckPassword]="model.password" class="form-control" name="confirmPassword"
+            placeholder="Confirm Password" [(ngModel)]="confirmPassword" #confirmPasswordControl="ngModel">
+            <div *ngIf="confirmPasswordControl.invalid && confirmPasswordControl.touched" class="alert alert-danger">
+                Your password must be 8 characters or more.
+            </div>
+            <div *ngIf="confirmPasswordControl.errors?.noMatch && confirmPasswordControl.touched" class="alert alert-danger">
+                Passwords do not match.
+            </div>                 
     </div>
-   <!-- <div class="form-group">
-        <label for="username">Username</label>
-        <input type="text" placeholder="Public nickname" class="form-control" [(ngModel)]="credentials.username" name="username">
-    </div> -->
-    <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" placeholder="Password" class="form-control" [(ngModel)]="credentials.password" name="password">
-    </div>
-    <div class="form-group">
-        <button type="submit" class="btn btn-primary">Register</button>
-        <a routerLink="/login" class="btn btn-primary">Cancel</a>
-    </div>
+    <mat-card-actions>
+        <button type="submit" class="btn btn-primary" style="margin:5px" [disabled]="!registerForm.form.valid">Register</button>
+        <button class="btn btn-primary" style="margin:5px"><a routerLink="/login" style="color: white">Cancel</a></button>
+    </mat-card-actions>
 </form>
+</mat-card>

@@ -7,6 +7,9 @@ import { Game } from '@/_models/games';
 import { Router } from '@angular/router';
 
 const baseUrl = 'http://localhost:3000/api';
+const httpOptions = {
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  };
 
 @Injectable({
   providedIn: 'root'
@@ -47,9 +50,8 @@ export class Games {
         );
     }
 
-    upload(game: Game) {
-        return this.http.request('post', `${baseUrl}/game`,
-        {headers: new HttpHeaders().set("Authorization", this._authHeader)})
+    upload(game: Game): Observable<Game>{
+        return this.http.post<Game>(`${baseUrl}/game`, game, httpOptions)
             .pipe(catchError((error) => this._handleError(error))
         );
     }

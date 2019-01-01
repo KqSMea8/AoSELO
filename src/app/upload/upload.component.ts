@@ -1,12 +1,12 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { AuthService } from '@/_services/authentication.service';
-import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { FormBuilder, Validators, FormGroup, FormControl } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router'
 import { Games } from '@/_services/games.service';
 import { Rank } from '@/_services/rank.service';
 import { Game } from '@/_models/games';
 import { Player } from '@/_models/players';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 import { FilterSortService } from '@/_services/filter-sort.service';
 import { OrderFactions, DesFactions,
           ChaosFactions, DeathFactions, BattlePlans } from '@/_models/data-arrays';
@@ -29,11 +29,21 @@ export class UploadComponent implements OnInit, OnDestroy {
   playerSub: Subscription;
   games: Game[];
   id: number;
+  playerOne: number;
+  playerTwo: number;
   player: Player = new Player;
+  gameCheck: Game = new Game;
   playerListSub: Subscription
-  playerList: Player;
+  searchQuery: string[] = [];
+  playerList: Player = new Player;
+  playerFound = false;
   filteredPlayers: Player[];
-  factionGAs = ['Chaos','Death', 'Destruction', 'Order']
+  factionGAs = [
+    { name: 'Chaos', value: 'chaosRank' },
+    { name: 'Death', value: 'deathRank' },
+    { name: 'Destruction', value: 'desRank' },
+    { name: 'Order', value: 'orderRank' }
+  ]
   P1GA: string[] = [];
   P2GA: string[] = [];
   orderFactions = OrderFactions;
@@ -52,6 +62,8 @@ export class UploadComponent implements OnInit, OnDestroy {
   submitted = false;
   searchForm: FormGroup;
   uploadForm: FormGroup;
+  formSub: Subscription;
+  message: string;
 
   constructor(private router: Router, public auth: AuthService, public game: Games,
               private rank: Rank, public fs: FilterSortService, private route: ActivatedRoute,
@@ -69,11 +81,14 @@ export class UploadComponent implements OnInit, OnDestroy {
       }
     });
     this.searchForm = this.formBuilder.group({
-      playerId: ['', Validators.required]
+      searchBy: null,
+      playerId: null,
+      email: null,
+      username: null
     });
     this.uploadForm = this.formBuilder.group({
-      playerOne: this.auth.currentUserValue.playerId,
-      playerTwo: this.playerList,
+      playerOne: null,
+      playerTwo: null,
       playerOneResult: [null, Validators.required],
       playerTwoResult: [null, Validators.required],
       battlePlan: [null, Validators.required],
@@ -86,11 +101,17 @@ export class UploadComponent implements OnInit, OnDestroy {
       playerTwoList: [null, Validators.required]
     });
     this.uploadForm.get('P1GA').valueChanges.subscribe(value => {
+      this.P1GA = [];
       this.P1GA.push(value);
     });
     this.uploadForm.get('P2GA').valueChanges.subscribe(value => {
+      this.P2GA = [];
       this.P2GA.push(value);
     });
+    this.searchForm.get('searchBy').valueChanges.subscribe(value => {
+      this.searchQuery = [];
+      this.searchQuery.push(value);
+    })
   }
 
   private _routeSubs() {
@@ -152,19 +173,38 @@ export class UploadComponent implements OnInit, OnDestroy {
         }
       );
   }
-
+  
+  
+  
   get s() {return this.searchForm.controls;}
 
   findPlayers() {
-    this.submitted = true;
     if (this.searchForm.invalid) {
       return;
     }
-    this.rank.findPlayer(this.s.playerId.value)
+
+    let formValue = this.searchForm.value;
+
+    for (let prop in formValue) {
+      if (!formValue[prop]) {
+        delete formValue[prop];
+      }
+      if (formValue.searchBy) {
+        delete formValue.searchBy;
+      }
+      if (Array.isArray(formValue[prop])) {
+        let resultArray = formValue[prop].filter((item: any) => item);
+        if (resultArray.length > 0 ) {
+          formValue[prop] = resultArray;
+        }
+      }
+    }
+    this.rank.findPlayer(formValue)
     .subscribe(
       result => {
-        this.playerList == result;
-        console.log("PUT Request is successful ", result);
+        this.playerList = result;
+        console.log(formValue);
+        this.playerFound = true;
       },
       error => {
           console.log("Error", error);
@@ -172,8 +212,15 @@ export class UploadComponent implements OnInit, OnDestroy {
   }
 
   submitGame() {
-    this.game.upload(new Game);
-   // this.submitted = true;
+    
+    this.uploadForm.controls['playerOne'].setValue(this.player.playerId);
+    this.uploadForm.controls['playerTwo'].setValue(this.playerList.playerId);
+
+    //console.log(this.uploadForm.value);
+    this.game.upload(this.uploadForm.value)
+      .subscribe();
+    this.submitted = true;
+    this.formSub = this.uploadForm.value;
   }
 
   onSubmitGame(e: any) { 

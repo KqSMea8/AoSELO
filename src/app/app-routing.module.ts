@@ -14,6 +14,8 @@ import { AuthGuardService } from "@/_guards/auth.guard";
 import { AdminGuard } from "@/_guards/admin.guard";
 import { LogoutComponent } from './_components/logout.component';
 import { ResetComponent } from './_components/reset/reset.component';
+import { UploadCallbackComponent } from '@/_components/upload-callback/upload-callback.component';
+import { RankSubmitComponent } from '@/_components/rank-submit/rank-submit.component';
 
 
 
@@ -26,6 +28,16 @@ const routes: Routes = [
 		path: 'upload',
 		canActivate: [AuthGuardService],
 		component: UploadComponent
+	},
+	{
+		path: 'uploadCallback',
+		canActivate: [AuthGuardService],
+		component: UploadCallbackComponent
+	},
+	{
+		path: 'upload/:uploadToken',
+		canActivate: [AuthGuardService],
+		component: RankSubmitComponent
 	},
 	{
 		path: 'profile',
@@ -55,6 +67,7 @@ const routes: Routes = [
 	},
 	{
 		path: 'password',
+		canActivate: [AuthGuardService],
 		component: CallbackComponent
 	},
 	{

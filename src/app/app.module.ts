@@ -33,6 +33,10 @@ import { FrameAuth } from './_services/frameauth.servce';
 import { ErrorInterceptor } from './_helpers/error.interceptor';
 import { JwtInterceptor } from './_helpers/jwt.interceptor';
 import { ResetComponent } from './_components/reset/reset.component';
+import { CheckPasswordDirective } from '@/_helpers/must-match.directive';
+import { PoliciesComponent } from './_components/policies/policies.component';
+import { UploadCallbackComponent } from '@/_components/upload-callback/upload-callback.component';
+import { RankSubmitComponent } from './_components/rank-submit/rank-submit.component';
 
 
 @NgModule({
@@ -54,7 +58,11 @@ import { ResetComponent } from './_components/reset/reset.component';
     CallbackComponent,
     LoadingComponent,
     LogoutComponent,
-    ResetComponent
+    ResetComponent,
+    CheckPasswordDirective,
+    PoliciesComponent,
+    UploadCallbackComponent,
+    RankSubmitComponent
   ],
   imports: [
     BrowserModule,
