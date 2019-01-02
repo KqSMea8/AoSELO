@@ -36,7 +36,7 @@ export class UploadComponent implements OnInit, OnDestroy {
   playerListSub: Subscription
   searchQuery: string[] = [];
   playerList: Player = new Player;
-  playerFound = false;
+  playerFound = true;
   filteredPlayers: Player[];
   factionGAs = [
     { name: 'Chaos', value: 'chaosRank' },
@@ -203,7 +203,7 @@ export class UploadComponent implements OnInit, OnDestroy {
     .subscribe(
       result => {
         this.playerList = result;
-        console.log(formValue);
+        console.log(result);
         this.playerFound = true;
       },
       error => {

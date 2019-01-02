@@ -1,45 +1,45 @@
-  <div id="uploader" class="uploader" ([ngModel])="playerSub">
+  <div id="uploader" class="uploader">
   <div [hidden]="submitted" class="card-body">
-    <mat-card id="heading">
-    <h3>Entering Results as:</h3>
-    <h4>{{player.username}}</h4>
+    <mat-card id="heading"  ([ngModel])="playerSub">
+      <h3>Entering Results as:</h3>
+      <h4>{{player.username}}</h4>
     </mat-card>
     <br>
     <mat-card>
-    <mat-card-title>Find opponent:</mat-card-title>
-    <form [formGroup]="searchForm" (ngSubmit)="findPlayers()">
-      <div class="form-group">
-        <select placeholder="Search by:" class="form-control" formControlName="searchBy">
-          <option [value]="null">Search by:</option>
-          <option value="playerId">Player ID</option>
-          <option value="email">Email address</option>
-          <option value="username">Username</option>
-        </select>
-        <input *ngIf="searchQuery.includes('playerId')" class="form-control" type="text" 
-          placeholder="Enter Player ID" formControlName="playerId" />
-        <input *ngIf="searchQuery.includes('email')" class="form-control" type="text" 
-          placeholder="Enter Email" formControlName="email" />
-        <input *ngIf="searchQuery.includes('username')" class="form-control" type="text" 
-          placeholder="Enter Username" formControlName="username" />
-      </div>
-      <mat-card-actions>
-        <button class="btn btn-primary" type="submit">Search</button>
-      </mat-card-actions>
-    </form>
-    <mat-card-footer *ngIf="playerList" ([ngModel])="playerList">{{playerList.username}}</mat-card-footer>
+      <mat-card-title>Find opponent:</mat-card-title>
+      <form [formGroup]="searchForm" (ngSubmit)="findPlayers()">
+        <div class="form-group">
+          <select placeholder="Search by:" class="form-control" formControlName="searchBy">
+            <option [value]="null">Search by:</option>
+            <option value="playerId">Player ID</option>
+            <option value="email">Email address</option>
+            <option value="username">Username</option>
+          </select>
+          <input *ngIf="searchQuery.includes('playerId')" class="form-control" type="text" 
+            placeholder="Enter Player ID" formControlName="playerId" />
+          <input *ngIf="searchQuery.includes('email')" class="form-control" type="text" 
+            placeholder="Enter Email" formControlName="email" />
+          <input *ngIf="searchQuery.includes('username')" class="form-control" type="text" 
+            placeholder="Enter Username" formControlName="username" />
+        </div>
+        <mat-card-actions>
+          <button class="btn btn-primary" type="submit">Search</button>
+        </mat-card-actions>
+      </form>
+      <mat-card-footer *ngIf="playerList" ([ngModel])="playerList">{{playerList.username}}</mat-card-footer>
   </mat-card>
   <br>
 <mat-card *ngIf="playerFound" style="text-align: center">
-  <mat-card-title> Enter your results: </mat-card-title>  
+  <mat-card-title>Enter your results: </mat-card-title>  
   <form [formGroup]="uploadForm" (ngSubmit)="submitGame()">
   <mat-card-content>
   <div class="card-group" style="margin: auto 10% auto 10%">
     <mat-card>
       <mat-card-title>{{player.username}}'s Results:</mat-card-title>
         <div class="form-group">
-          <select placeholder="Select Grand Alliance" class="form-control" formControlName="P1GA">
-            <option value="null" disabled>Select Grand Alliance:</option>
-            <option *ngFor="let ga of factionGAs" [ngValue]="ga">{{ga.name}}</option>
+          <select class="form-control" formControlName="P1GA">
+            <option [ngValue]="null" disabled>Select Grand Alliance:</option>
+            <option *ngFor="let ga of factionGAs" value="ga.value">{{ga.name}}</option>
           </select>
           <select *ngIf="P1GA.name.includes('Order')" formControlName="playerOneFaction" class="form-control">
             <option [ngValue]="null">Select Faction:</option>
